@@ -5,6 +5,9 @@ import vue from "@vitejs/plugin-vue";
 // https://vitejs.dev/config/
 export default defineConfig({
     plugins: [ vue() ],
+    server: {
+        port: 5555
+    },
     resolve: {
         alias: {
             '@': resolve('src')
@@ -16,5 +19,5 @@ export default defineConfig({
                 charset: false
             }
         }
-    }
+    },
 })
