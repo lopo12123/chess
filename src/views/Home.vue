@@ -98,6 +98,7 @@ const ifSelf = (x: number, y: number) => {
             <div class="line">统计:</div>
             <div class="line"><i class="label-icon ceil_black"/>{{ count.black }}</div>
             <div class="line"><i class="label-icon ceil_white"/>{{ count.white }}</div>
+            <div class="line"><i class="label-icon ceil"/>{{ count.empty }}</div>
             <br>
             <div class="line">图例:</div>
             <div class="line"><i class="label-icon ceil hl-self"/>选择/取消选择</div>
