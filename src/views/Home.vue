@@ -64,9 +64,9 @@ const ifSelf = (x: number, y: number) => {
             <div class="line">当前: <i :class="['label-icon', 'ceil_'+currentPlayer]"/></div>
             <br>
             <div class="line">图例:</div>
-            <div class="line">选中: <i class="label-icon ceil hl-self"/></div>
-            <div class="line">复制: <i class="label-icon ceil hl-copy"/></div>
-            <div class="line">跳跃: <i class="label-icon ceil hl-jump"/></div>
+            <div class="line"><i class="label-icon ceil hl-self"/>选择/取消选择</div>
+            <div class="line"><i class="label-icon ceil hl-copy"/>复制</div>
+            <div class="line"><i class="label-icon ceil hl-jump"/>跳跃</div>
         </div>
         <div class="board-container">
             <div class="line"
@@ -109,7 +109,7 @@ const ifSelf = (x: number, y: number) => {
             justify-content: flex-start;
 
             .label-icon {
-                margin-left: 10px;
+                margin-right: 10px;
             }
         }
     }
