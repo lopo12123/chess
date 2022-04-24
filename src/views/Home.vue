@@ -1,14 +1,15 @@
 <script lang="ts" setup>
 import { ref } from "vue";
-import { ChessBoard, State } from "@/scripts";
+import { ChessBoard, CountInfo, Levels, State } from "@/scripts";
 
 // 初始化
 const game = new ChessBoard()
-game.doPlace(State.black, [ [ 0, 0 ], [ 8, 8 ] ])
-game.doPlace(State.white, [ [ 0, 8 ], [ 8, 0 ], ])
 
-// 状态展示
-const board = ref<State[][]>(game.see())
+// region 用于状态展示
+const initState = game.see()
+const board = ref<State[][]>(initState[0])
+const count = ref<CountInfo>(initState[1])
+// endregion
 
 // 状态 - 待选择/待执行
 const userState = ref<'toSelect' | 'toGo'>('toSelect')
@@ -40,10 +41,27 @@ const clickBoard = (x: number, y: number) => {
         // 换人
         currentPlayer.value = currentPlayer.value === State.black ? State.white : State.black
         // 更新状态
-        board.value = game.see()
+        ;[ board.value, count.value ] = game.see()
     }
 }
 
+// region 开始
+const level = ref(0)
+const selectLevel = () => {
+    if(level.value >= Levels.length) {
+        alert('超出范围')
+        return
+    }
+    game.doInit(Levels[level.value])
+    userState.value = 'toSelect'
+    currentPlayer.value = State.black
+    selected.value = [ -100, -100 ]
+    ;[ board.value, count.value ] = game.see()
+}
+selectLevel()
+// endregion
+
+// region 用于高亮判断
 // 可跳点位 - 高亮判断
 const ifJump = (x: number, y: number) => {
     return (Math.abs(x - selected.value[0]) < 3) && (Math.abs(y - selected.value[1]) < 3) && !ifCopy(x, y) && !ifSelf(x, y)
@@ -56,12 +74,25 @@ const ifCopy = (x: number, y: number) => {
 const ifSelf = (x: number, y: number) => {
     return (x === selected.value[0]) && (y === selected.value[1])
 }
+// endregion
 </script>
 
 <template>
     <div class="home">
         <div class="brief-container">
-            <div class="line">当前: <i :class="['label-icon', 'ceil_'+currentPlayer]"/></div>
+            <div class="line">选择:</div>
+            <div class="line">
+                <select class="level-selector" v-model="level" @change="selectLevel">
+                    <option value="0">lv.1</option>
+                    <option value="1">lv.2</option>
+                </select>
+            </div>
+            <div class="line">当前</div>
+            <div class="line"><i :class="['label-icon', 'ceil_'+currentPlayer]"/></div>
+            <br>
+            <div class="line">统计:</div>
+            <div class="line"><i class="label-icon ceil_black"/>{{ count.black }}</div>
+            <div class="line"><i class="label-icon ceil_white"/>{{ count.white }}</div>
             <br>
             <div class="line">图例:</div>
             <div class="line"><i class="label-icon ceil hl-self"/>选择/取消选择</div>
@@ -110,6 +141,15 @@ const ifSelf = (x: number, y: number) => {
 
             .label-icon {
                 margin-right: 10px;
+            }
+            .level-selector {
+                position: relative;
+                width: 80px;
+                height: 24px;
+                margin-left: 5px;
+                border: solid 1px #777777;
+                outline: none;
+                cursor: pointer;
             }
         }
     }
