@@ -71,12 +71,19 @@ class ChessBoard {
     }
 
     doInit(initState: InitState) {
+        // reset border
         for (let y = 0; y < this.#size; y++) {
             this.#board[y] = []
             for (let x = 0; x < this.#size; x++) {
                 this.#board[y][x] = State.empty
             }
         }
+        // reset count
+        this.#count[State.empty] = 0
+        this.#count[State.black] = 0
+        this.#count[State.white] = 0
+
+        // place specific place
         initState.black.forEach((point) => {
             if(this.#board[point[1]][point[0]] !== State.empty) {
                 this.#count[this.#board[point[1]][point[0]]]--
