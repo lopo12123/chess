@@ -5,10 +5,14 @@ import { ChessBoard, CountInfo, Levels, State } from "@/scripts";
 // 初始化
 const game = new ChessBoard()
 
-// region 用于状态展示
+// region 状态展示及结束判断
 const initState = game.see()
 const board = ref<State[][]>(initState[0])
 const count = ref<CountInfo>(initState[1])
+const judgeIfEnd = () => {
+    const [ ifEnd, winner ] = game.doJudge()
+    if(ifEnd) alert(`game is over, winner is [${ winner }]`)
+}
 // endregion
 
 // 状态 - 待选择/待执行
@@ -42,6 +46,7 @@ const clickBoard = (x: number, y: number) => {
         currentPlayer.value = currentPlayer.value === State.black ? State.white : State.black
         // 更新状态
         ;[ board.value, count.value ] = game.see()
+        judgeIfEnd()
     }
 }
 
@@ -142,6 +147,7 @@ const ifSelf = (x: number, y: number) => {
             .label-icon {
                 margin-right: 10px;
             }
+
             .level-selector {
                 position: relative;
                 width: 80px;
