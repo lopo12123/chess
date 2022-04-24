@@ -61,9 +61,7 @@ class ChessBoard {
      */
     doPlace(state: Exclude<State, State.empty>, positions: [ number, number ][]) {
         positions.forEach((point) => {
-            if(this.#board[point[1]][point[0]] !== State.empty) {
-                this.#count[this.#board[point[1]][point[0]]]--
-            }
+            this.#count[this.#board[point[1]][point[0]]]--
             this.#count[state]++
 
             this.#board[point[1]][point[0]] = state
@@ -71,6 +69,10 @@ class ChessBoard {
     }
 
     doInit(initState: InitState) {
+        this.#count[State.empty] = this.#size * this.#size
+        this.#count[State.black] = 0
+        this.#count[State.white] = 0
+
         // reset border
         for (let y = 0; y < this.#size; y++) {
             this.#board[y] = []
@@ -79,23 +81,16 @@ class ChessBoard {
             }
         }
         // reset count
-        this.#count[State.empty] = 0
-        this.#count[State.black] = 0
-        this.#count[State.white] = 0
 
         // place specific place
         initState.black.forEach((point) => {
-            if(this.#board[point[1]][point[0]] !== State.empty) {
-                this.#count[this.#board[point[1]][point[0]]]--
-            }
+            this.#count[this.#board[point[1]][point[0]]]--
             this.#count[State.black]++
 
             this.#board[point[1]][point[0]] = State.black
         })
         initState.white.forEach((point) => {
-            if(this.#board[point[1]][point[0]] !== State.empty) {
-                this.#count[this.#board[point[1]][point[0]]]--
-            }
+            this.#count[this.#board[point[1]][point[0]]]--
             this.#count[State.white]++
 
             this.#board[point[1]][point[0]] = State.white
@@ -110,6 +105,7 @@ class ChessBoard {
 
     doCopy(state: Exclude<State, State.empty>, to: [ number, number ]) {
         this.#board[to[1]][to[0]] = state
+        this.#count.empty--
         this.#count[state]++
         this.doAssimilate(state, to)
     }
