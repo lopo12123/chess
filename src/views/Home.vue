@@ -1,11 +1,11 @@
 <script lang="ts" setup>
-import { computed, ref } from "vue";
+import { ref } from "vue";
 import { ChessBoard, State } from "@/scripts";
 
 // 初始化
 const game = new ChessBoard()
-game.doPlace('black', [ [ 0, 0 ], [ 8, 8 ] ])
-game.doPlace('white', [ [ 0, 8 ], [ 8, 0 ], ])
+game.doPlace(State.black, [ [ 0, 0 ], [ 8, 8 ] ])
+game.doPlace(State.white, [ [ 0, 8 ], [ 8, 0 ], ])
 
 // 状态展示
 const board = ref<State[][]>(game.see())
@@ -13,7 +13,7 @@ const board = ref<State[][]>(game.see())
 // 状态 - 待选择/待执行
 const userState = ref<'toSelect' | 'toGo'>('toSelect')
 // 当前回合角色
-const currentPlayer = ref<Exclude<State, 'empty'>>('black')
+const currentPlayer = ref<Exclude<State, 'empty'>>(State.black)
 // 拿起的点 - 高亮
 const selected = ref<[ number, number ]>([ -100, -100 ])
 // 点击格子
@@ -38,7 +38,7 @@ const clickBoard = (x: number, y: number) => {
         // 重置选中的棋子
         selected.value = [ -100, -100 ]
         // 换人
-        currentPlayer.value = currentPlayer.value === 'black' ? 'white' : 'black'
+        currentPlayer.value = currentPlayer.value === State.black ? State.white : State.black
         // 更新状态
         board.value = game.see()
     }
