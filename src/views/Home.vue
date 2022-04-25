@@ -69,11 +69,11 @@ selectLevel()
 // region 用于高亮判断
 // 可跳点位 - 高亮判断
 const ifJump = (x: number, y: number) => {
-    return (Math.abs(x - selected.value[0]) < 3) && (Math.abs(y - selected.value[1]) < 3) && !ifCopy(x, y) && !ifSelf(x, y)
+    return board.value[y][x] === State.empty && (Math.abs(x - selected.value[0]) < 3) && (Math.abs(y - selected.value[1]) < 3) && !ifCopy(x, y) && !ifSelf(x, y)
 }
 // 可复制点位 - 高亮判断
 const ifCopy = (x: number, y: number) => {
-    return (Math.abs(x - selected.value[0]) < 2) && (Math.abs(y - selected.value[1]) < 2) && !ifSelf(x, y)
+    return board.value[y][x] === State.empty && (Math.abs(x - selected.value[0]) < 2) && (Math.abs(y - selected.value[1]) < 2) && !ifSelf(x, y)
 }
 // 选中点位 - 高亮判断
 const ifSelf = (x: number, y: number) => {
