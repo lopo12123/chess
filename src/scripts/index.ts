@@ -29,8 +29,27 @@ class ChessBoard {
         [State.white]: 0
     }
 
-    private stillLive(state: State) {
+    private ifAroundExist(target: State, pos: [ number, number ]) {
+        for (let y = Math.max(pos[1] - 2, 0); y <= Math.min(pos[1] + 2, this.#size - 1); y++) {
+            for (let x = Math.min(pos[0] - 2, 0); x < Math.min(pos[0] - 2, this.#size - 1); x++) {
+                if(this.#board[y][x] === target) return true
+            }
+        }
         return false
+    }
+
+    /**
+     * @description 判断是否被全封闭
+     */
+    private stillLive(): [ black: boolean, white: boolean ] {
+        let [ black, white ] = [ false, false ]
+        for (let y = 0; y < this.#size; y++) {
+            for (let x = 0; x < this.#size; x++) {
+                if(!black && this.ifAroundExist(State.black, [ x, y ])) black = true
+                if(!white && this.ifAroundExist(State.white, [ x, y ])) white = true
+            }
+        }
+        return [ black, white ]
     }
 
     /**
@@ -117,16 +136,18 @@ class ChessBoard {
         this.doAssimilate(state, to)
     }
 
-    doJudge(): [ boolean, State ] {
+    doJudge(): [ ifEnd: boolean, winner: State ] {
         // 如果已经全部占满则必定结束
         if(this.#count[State.empty] === 0) return [ true, this.#count[State.black] > this.#count[State.white] ? State.black : State.white ]
         // 如果一方没有子则必定结束
         else if(this.#count[State.black] === 0) return [ true, State.white ]
         else if(this.#count[State.white] === 0) return [ true, State.black ]
         // 如果一方被全部封闭则必定结束
-        else if(!this.stillLive(State.white)) return [ false, State.black ]
-        else if(!this.stillLive(State.black)) return [ false, State.white ]
-
+        else {
+            const [ black, white ] = this.stillLive()
+            if(!black) return [ true, State.white ]
+            else if(!white) return [ true, State.black ]
+        }
         // 都不满足则没有结束
         return [ false, State.empty ]
     }
