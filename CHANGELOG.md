@@ -1,10 +1,17 @@
 #### CHANGELOG
 - v0.0.1  
-  - layout
-  - label
-  - copy
-  - jump
-  - assimilate  
+  - feat:  
+    - layout
+    - label
+    - copy
+    - jump
+    - assimilate  
 - v0.0.2
-  - count of black/white/empty  
-  - judge if end  
+  - feat:  
+    - count of black/white/empty  
+    - judge if end  
+- v0.0.3  
+  - feat:  
+    - better highlight  
+  - fix:  
+    - judge if end (more condition is take into consider)
