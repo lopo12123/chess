@@ -57,7 +57,11 @@ const selectLevel = () => {
         alert('超出范围')
         return
     }
-    game.doInit(Levels[level.value])
+    // game.doInit(Levels[level.value])
+    game.doInit({
+        black: [[0,0]],
+        white: [[1,1], [2,2]]
+    })
     userState.value = 'toSelect'
     currentPlayer.value = State.black
     selected.value = [ -100, -100 ]
@@ -69,11 +73,11 @@ selectLevel()
 // region 用于高亮判断
 // 可跳点位 - 高亮判断
 const ifJump = (x: number, y: number) => {
-    return board.value[y][x] === State.empty && (Math.abs(x - selected.value[0]) < 3) && (Math.abs(y - selected.value[1]) < 3) && !ifCopy(x, y) && !ifSelf(x, y)
+    return (Math.abs(x - selected.value[0]) < 3) && (Math.abs(y - selected.value[1]) < 3) && !ifCopy(x, y) && !ifSelf(x, y)
 }
 // 可复制点位 - 高亮判断
 const ifCopy = (x: number, y: number) => {
-    return board.value[y][x] === State.empty && (Math.abs(x - selected.value[0]) < 2) && (Math.abs(y - selected.value[1]) < 2) && !ifSelf(x, y)
+    return (Math.abs(x - selected.value[0]) < 2) && (Math.abs(y - selected.value[1]) < 2) && !ifSelf(x, y)
 }
 // 选中点位 - 高亮判断
 const ifSelf = (x: number, y: number) => {
@@ -109,8 +113,10 @@ const ifSelf = (x: number, y: number) => {
                 <div v-for="(ceil, ceil_index) in line" :key="'column'+ceil_index"
                      :class="{
                         ['ceil_'+ceil]: true,
-                        'hl-jump': ifJump(ceil_index, line_index),
-                        'hl-copy': ifCopy(ceil_index, line_index),
+                        'hl-jump': ifJump(ceil_index, line_index) && board[line_index][ceil_index] === State.empty,
+                        'hl-jump__disabled': ifJump(ceil_index, line_index) && board[line_index][ceil_index] !== State.empty,
+                        'hl-copy': ifCopy(ceil_index, line_index) && board[line_index][ceil_index] === State.empty,
+                        'hl-copy__disabled': ifCopy(ceil_index, line_index) && board[line_index][ceil_index] !== State.empty,
                         'hl-self': ifSelf(ceil_index, line_index),
                     }"
                      @click="clickBoard(ceil_index, line_index)">
@@ -232,11 +238,19 @@ const ifSelf = (x: number, y: number) => {
     }
 
     .hl-jump {
+        background-color: #00800066 !important;
+        cursor: pointer;
+    }
+    .hl-jump__disabled {
         background-color: #00800033 !important;
         cursor: pointer;
     }
 
     .hl-copy {
+        background-color: #ffa50066 !important;
+        cursor: pointer;
+    }
+    .hl-copy__disabled {
         background-color: #ffa50033 !important;
         cursor: pointer;
     }
