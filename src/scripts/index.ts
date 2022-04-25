@@ -29,6 +29,13 @@ class ChessBoard {
         [State.white]: 0
     }
 
+    private stillLive(state: State) {
+        return false
+    }
+
+    /**
+     * @description 同化
+     */
     private doAssimilate(state: State, center: [ number, number ]) {
         for (let i = Math.max(center[1] - 1, 0); i <= Math.min(center[1] + 1, this.#size - 1); i++) {
             for (let j = Math.max(center[0] - 1, 0); j <= Math.min(center[0] + 1, this.#size - 1); j++) {
@@ -111,9 +118,16 @@ class ChessBoard {
     }
 
     doJudge(): [ boolean, State ] {
-        if(this.#count[State.empty] === 0) {
-            return [ true, this.#count[State.black] > this.#count[State.white] ? State.black : State.white ]
-        }
+        // 如果已经全部占满则必定结束
+        if(this.#count[State.empty] === 0) return [ true, this.#count[State.black] > this.#count[State.white] ? State.black : State.white ]
+        // 如果一方没有子则必定结束
+        else if(this.#count[State.black] === 0) return [ true, State.white ]
+        else if(this.#count[State.white] === 0) return [ true, State.black ]
+        // 如果一方被全部封闭则必定结束
+        else if(!this.stillLive(State.white)) return [ false, State.black ]
+        else if(!this.stillLive(State.black)) return [ false, State.white ]
+
+        // 都不满足则没有结束
         return [ false, State.empty ]
     }
 
