@@ -81,19 +81,6 @@ class ChessBoard {
         }
     }
 
-    /**
-     * @deprecated
-     * @see doInit
-     */
-    doPlace(state: Exclude<State, State.empty>, positions: [ number, number ][]) {
-        positions.forEach((point) => {
-            this.#count[this.#board[point[1]][point[0]]]--
-            this.#count[state]++
-
-            this.#board[point[1]][point[0]] = state
-        })
-    }
-
     doInit(initState: InitState) {
         this.#count[State.empty] = this.#size * this.#size
         this.#count[State.black] = 0
