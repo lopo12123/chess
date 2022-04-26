@@ -29,6 +29,9 @@ class ChessBoard {
         [State.white]: 0
     }
 
+    /**
+     * @description 判断某一点周围距离2(含)以内是否存在目标
+     */
     private ifAroundExist(target: State, pos: [ number, number ]) {
         for (let y = Math.max(pos[1] - 2, 0); y <= Math.min(pos[1] + 2, this.#size - 1); y++) {
             for (let x = Math.min(pos[0] - 2, 0); x < Math.min(pos[0] - 2, this.#size - 1); x++) {
@@ -81,7 +84,11 @@ class ChessBoard {
         }
     }
 
+    /**
+     * @description 传入黑白的坐标数组, 对board进行初始化
+     */
     doInit(initState: InitState) {
+        // reset count
         this.#count[State.empty] = this.#size * this.#size
         this.#count[State.black] = 0
         this.#count[State.white] = 0
@@ -93,7 +100,6 @@ class ChessBoard {
                 this.#board[y][x] = State.empty
             }
         }
-        // reset count
 
         // place specific place
         initState.black.forEach((point) => {
@@ -110,12 +116,18 @@ class ChessBoard {
         })
     }
 
+    /**
+     * @description 执行跳跃(上下左右前进2) 并执行同化
+     */
     doJump(state: Exclude<State, State.empty>, from: [ number, number ], to: [ number, number ]) {
         this.#board[from[1]][from[0]] = State.empty
         this.#board[to[1]][to[0]] = state
         this.doAssimilate(state, to)
     }
 
+    /**
+     * @description 执行复制(距离1任意空位新增一个同类) 并执行同化
+     */
     doCopy(state: Exclude<State, State.empty>, to: [ number, number ]) {
         this.#board[to[1]][to[0]] = state
         this.#count.empty--
@@ -123,6 +135,9 @@ class ChessBoard {
         this.doAssimilate(state, to)
     }
 
+    /**
+     * @description 判断是否结束(结束则找出胜者)
+     */
     doJudge(): [ ifEnd: boolean, winner: State ] {
         // 如果已经全部占满则必定结束
         if(this.#count[State.empty] === 0) return [ true, this.#count[State.black] > this.#count[State.white] ? State.black : State.white ]
@@ -139,6 +154,9 @@ class ChessBoard {
         return [ false, State.empty ]
     }
 
+    /**
+     * @description 返回当前board和统计信息的快照(深拷贝)
+     */
     see(): [ State[][], CountInfo ] {
         return [
             JSON.parse(JSON.stringify(this.#board)),
