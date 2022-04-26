@@ -45,7 +45,7 @@ class Auto {
             for (let x = Math.max(pos[0] - 2, 0); x <= Math.min(pos[0] + 2, this.#size - 1); x++) {
                 if(x === pos[0] && y === pos[1]) continue
                 if(board[y][x] === State.empty) {
-                    (Math.abs(x - pos[0]) <= 1 && Math.abs(y - pos[1]) <= 0)
+                    (Math.abs(x - pos[0]) <= 1 && Math.abs(y - pos[1]) <= 1)
                         ? (res.copy.push([ x, y ]))
                         : (res.jump.push([ x, y ]))
                 }
