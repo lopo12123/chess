@@ -3,6 +3,21 @@ import { getOpponent, State } from "./index";
 class Auto {
     readonly #size: number
 
+    /**
+     * @description 数组中随机取一项
+     */
+    static randomPick<T>(arr: T[]): T | null {
+        if(arr.length === 0) return null
+        return arr[~~(Math.random() * arr.length)]
+    }
+
+    /**
+     * @description 数组中随机取一项
+     */
+    randomPick<T>(arr: T[]): T {
+        return arr[~~(Math.random() * arr.length)]
+    }
+
     constructor(size: number = 9) {
         this.#size = size
     }
@@ -43,17 +58,17 @@ class Auto {
      * @description 分析当前状态并得出得分最高的选择
      */
     doAnalyse(board: State[][], self: Exclude<State, State.empty>)
-        : { from: [ number, number ], to: [ number, number ], score: number, type: 'copy' | 'jump' } {
+        : { solutions: { from: [ number, number ], to: [ number, number ], type: 'copy' | 'jump' }[], score: number } {
         const bestTillNow: {
-            from: [ number, number ]
-            to: [ number, number ]
-            score: number,
-            type: 'copy' | 'jump'
+            solutions: {
+                from: [ number, number ],
+                to: [ number, number ],
+                type: 'copy' | 'jump'
+            }[],
+            score: number
         } = {
-            from: [ -1, -1 ],
-            to: [ -1, -1 ],
+            solutions: [],
             score: -1,
-            type: 'copy'
         }
 
         for (let y = 0; y < this.#size; y++) {
@@ -67,9 +82,18 @@ class Auto {
                         const copyScore = this.countAssimilate(board, copyPoint, self) * 2 + 1
                         if(copyScore > bestTillNow.score) {
                             bestTillNow.score = copyScore
-                            bestTillNow.from = [ x, y ]
-                            bestTillNow.to = copyPoint
-                            bestTillNow.type = 'copy'
+                            bestTillNow.solutions = [ {
+                                from: [ x, y ],
+                                to: copyPoint,
+                                type: 'copy'
+                            } ]
+                        }
+                        else if(copyScore == bestTillNow.score) {
+                            bestTillNow.solutions.push({
+                                from: [ x, y ],
+                                to: copyPoint,
+                                type: 'copy'
+                            })
                         }
                     })
 
@@ -78,9 +102,18 @@ class Auto {
                         const jumpScore = this.countAssimilate(board, jumpPoint, self) * 2
                         if(jumpScore > bestTillNow.score) {
                             bestTillNow.score = jumpScore
-                            bestTillNow.from = [ x, y ]
-                            bestTillNow.to = jumpPoint
-                            bestTillNow.type = 'jump'
+                            bestTillNow.solutions = [ {
+                                from: [ x, y ],
+                                to: jumpPoint,
+                                type: 'jump'
+                            } ]
+                        }
+                        else if(jumpScore === bestTillNow.score) {
+                            bestTillNow.solutions.push({
+                                from: [ x, y ],
+                                to: jumpPoint,
+                                type: 'jump'
+                            })
                         }
                     })
                 }
