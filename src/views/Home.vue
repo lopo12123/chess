@@ -162,8 +162,8 @@ const ifSelf = (x: number, y: number) => {
         <div class="board-container">
             <div class="line">
                 <div class="ceil_ceil"></div>
-                <div class="ceil_ceil" v-for="(drop, ceil_index) in board.length" :key="ceil_index">
-                    {{ ceil_index }}
+                <div class="ceil_ceil" v-for="(ceil_index) in board.length" :key="ceil_index">
+                    {{ ceil_index - 1 }}
                 </div>
             </div>
             <div class="line" v-for="(line, line_index) in board" :key="'line'+line_index">
