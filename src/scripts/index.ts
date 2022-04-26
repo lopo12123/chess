@@ -41,7 +41,7 @@ class ChessBoard {
      */
     private ifAroundExist(target: State, pos: [ x: number, y: number ]): boolean {
         for (let y = Math.max(pos[1] - 2, 0); y <= Math.min(pos[1] + 2, this.#size - 1); y++) {
-            for (let x = Math.max(pos[0] - 2, 0); x < Math.min(pos[0] + 2, this.#size - 1); x++) {
+            for (let x = Math.max(pos[0] - 2, 0); x <= Math.min(pos[0] + 2, this.#size - 1); x++) {
                 if(this.#board[y][x] === target) return true
             }
         }
