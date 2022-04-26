@@ -1,17 +1,21 @@
 #### CHANGELOG
 - v0.0.1  
   - feat:  
-    - layout
-    - label
-    - copy
-    - jump
-    - assimilate  
+    - 布局  
+    - 图例  
+    - 执行`复制`  
+    - 执行`跳跃`  
+    - 同化  
 - v0.0.2
   - feat:  
-    - count of black/white/empty  
-    - judge if end  
+    - 统计当前的`黑/白/空`数量  
+    - 结束判定. 当场上没有空格时比较, 数量多者胜  
 - v0.0.3  
   - feat:  
-    - better highlight  
+    - 可走位置高亮  
+    - 结束判定. 增加判断条件: 当某一方无法继续执行`复制`或`跳跃`时结束, 数量多者胜
+- v0.0.4  
+  - feat:  
+    - ai提示和自动执行  
   - fix:  
-    - judge if end (more condition is take into consider)
+    - 结束判定. 修复了被完全包围的判定错误
