@@ -6,7 +6,7 @@ const enum State {
 
 type CountInfo = { [k in State]: number }
 
-type InitState = { [k in Exclude<State, State.empty>]: [ number, number ][] }
+type InitState = { [k in Exclude<State, State.empty>]: [ x: number, y: number ][] }
 
 const Levels: InitState[] = [
     {
@@ -32,7 +32,7 @@ class ChessBoard {
     /**
      * @description 判断某一点周围距离2(含)以内是否存在目标
      */
-    private ifAroundExist(target: State, pos: [ number, number ]) {
+    private ifAroundExist(target: State, pos: [ x: number, y: number ]): boolean {
         for (let y = Math.max(pos[1] - 2, 0); y <= Math.min(pos[1] + 2, this.#size - 1); y++) {
             for (let x = Math.max(pos[0] - 2, 0); x < Math.min(pos[0] - 2, this.#size - 1); x++) {
                 if(this.#board[y][x] === target) return true
@@ -58,7 +58,7 @@ class ChessBoard {
     /**
      * @description 同化
      */
-    private doAssimilate(state: State, center: [ number, number ]) {
+    private doAssimilate(state: State, center: [ x: number, y: number ]): void {
         for (let y = Math.max(center[1] - 1, 0); y <= Math.min(center[1] + 1, this.#size - 1); y++) {
             for (let x = Math.max(center[0] - 1, 0); x <= Math.min(center[0] + 1, this.#size - 1); x++) {
                 if(this.#board[y][x] !== undefined
@@ -87,7 +87,7 @@ class ChessBoard {
     /**
      * @description 传入黑白的坐标数组, 对board进行初始化
      */
-    doInit(initState: InitState) {
+    doInit(initState: InitState): void {
         // reset count
         this.#count[State.empty] = this.#size * this.#size
         this.#count[State.black] = 0
@@ -119,7 +119,7 @@ class ChessBoard {
     /**
      * @description 执行跳跃(上下左右前进2) 并执行同化
      */
-    doJump(state: Exclude<State, State.empty>, from: [ number, number ], to: [ number, number ]) {
+    doJump(state: Exclude<State, State.empty>, from: [ x: number, y: number ], to: [ x: number, y: number ]): void {
         this.#board[from[1]][from[0]] = State.empty
         this.#board[to[1]][to[0]] = state
         this.doAssimilate(state, to)
@@ -128,7 +128,7 @@ class ChessBoard {
     /**
      * @description 执行复制(距离1任意空位新增一个同类) 并执行同化
      */
-    doCopy(state: Exclude<State, State.empty>, to: [ number, number ]) {
+    doCopy(state: Exclude<State, State.empty>, to: [ x: number, y: number ]): void {
         this.#board[to[1]][to[0]] = state
         this.#count.empty--
         this.#count[state]++
