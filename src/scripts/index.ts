@@ -4,6 +4,13 @@ const enum State {
     'white' = 'white',
 }
 
+/**
+ * @description 获取对手
+ */
+const getOpponent = (self: Exclude<State, State.empty>): Exclude<State, State.empty> => {
+    return self === State.black ? State.white : State.black
+}
+
 type CountInfo = { [k in State]: number }
 
 type InitState = { [k in Exclude<State, State.empty>]: [ x: number, y: number ][] }
@@ -171,5 +178,6 @@ export type {
 export {
     Levels,
     State,
+    getOpponent,
     ChessBoard
 }
