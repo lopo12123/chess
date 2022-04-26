@@ -34,7 +34,7 @@ class ChessBoard {
      */
     private ifAroundExist(target: State, pos: [ number, number ]) {
         for (let y = Math.max(pos[1] - 2, 0); y <= Math.min(pos[1] + 2, this.#size - 1); y++) {
-            for (let x = Math.min(pos[0] - 2, 0); x < Math.min(pos[0] - 2, this.#size - 1); x++) {
+            for (let x = Math.max(pos[0] - 2, 0); x < Math.min(pos[0] - 2, this.#size - 1); x++) {
                 if(this.#board[y][x] === target) return true
             }
         }
@@ -59,14 +59,14 @@ class ChessBoard {
      * @description 同化
      */
     private doAssimilate(state: State, center: [ number, number ]) {
-        for (let i = Math.max(center[1] - 1, 0); i <= Math.min(center[1] + 1, this.#size - 1); i++) {
-            for (let j = Math.max(center[0] - 1, 0); j <= Math.min(center[0] + 1, this.#size - 1); j++) {
-                if(this.#board[i][j] !== undefined
-                    && this.#board[i][j] !== State.empty
-                    && this.#board[i][j] !== state) {
-                    this.#count[this.#board[i][j]]--
+        for (let y = Math.max(center[1] - 1, 0); y <= Math.min(center[1] + 1, this.#size - 1); y++) {
+            for (let x = Math.max(center[0] - 1, 0); x <= Math.min(center[0] + 1, this.#size - 1); x++) {
+                if(this.#board[y][x] !== undefined
+                    && this.#board[y][x] !== State.empty
+                    && this.#board[y][x] !== state) {
+                    this.#count[this.#board[y][x]]--
                     this.#count[state]++
-                    this.#board[i][j] = state
+                    this.#board[y][x] = state
                 }
             }
         }
