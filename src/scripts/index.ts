@@ -41,7 +41,7 @@ class ChessBoard {
      */
     private ifAroundExist(target: State, pos: [ x: number, y: number ]): boolean {
         for (let y = Math.max(pos[1] - 2, 0); y <= Math.min(pos[1] + 2, this.#size - 1); y++) {
-            for (let x = Math.max(pos[0] - 2, 0); x < Math.min(pos[0] - 2, this.#size - 1); x++) {
+            for (let x = Math.max(pos[0] - 2, 0); x < Math.min(pos[0] + 2, this.#size - 1); x++) {
                 if(this.#board[y][x] === target) return true
             }
         }
@@ -55,8 +55,10 @@ class ChessBoard {
         let [ black, white ] = [ false, false ]
         for (let y = 0; y < this.#size; y++) {
             for (let x = 0; x < this.#size; x++) {
-                if(!black && this.ifAroundExist(State.black, [ x, y ])) black = true
-                if(!white && this.ifAroundExist(State.white, [ x, y ])) white = true
+                if(this.#board[y][x] === State.empty) {
+                    if(!black && this.ifAroundExist(State.black, [ x, y ])) black = true
+                    if(!white && this.ifAroundExist(State.white, [ x, y ])) white = true
+                }
             }
         }
         return [ black, white ]
@@ -164,7 +166,7 @@ class ChessBoard {
     /**
      * @description 返回当前board和统计信息的快照(深拷贝)
      */
-    see(): [ State[][], CountInfo ] {
+    see(): [ board: State[][], count: CountInfo ] {
         return [
             JSON.parse(JSON.stringify(this.#board)),
             JSON.parse(JSON.stringify(this.#count))
